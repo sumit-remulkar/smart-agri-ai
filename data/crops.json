@@ -1,0 +1,21 @@
+{
+  "Cotton": {"soil": ["Black Soil"], "avg_profit": 80000, "market_demand": 8},
+  "Soybean": {"soil": ["Black Soil", "Red Soil"], "avg_profit": 60000, "market_demand": 9},
+  "Tur": {"soil": ["Red Soil"], "avg_profit": 50000, "market_demand": 7},
+  "Wheat": {"soil": ["Alluvial Soil"], "avg_profit": 45000, "market_demand": 8},
+  "Rice": {"soil": ["Alluvial Soil"], "avg_profit": 55000, "market_demand": 9},
+  "Sugarcane": {"soil": ["Alluvial Soil", "Black Soil"], "avg_profit": 90000, "market_demand": 9},
+
+  "Mango": {"soil": ["Laterite Soil", "Alluvial Soil"], "avg_profit": 120000, "market_demand": 9},
+  "Cashew": {"soil": ["Laterite Soil"], "avg_profit": 100000, "market_demand": 8},
+  "Coconut": {"soil": ["Coastal Soil", "Laterite Soil"], "avg_profit": 110000, "market_demand": 8},
+  "Banana": {"soil": ["Alluvial Soil"], "avg_profit": 95000, "market_demand": 9},
+  "Pomegranate": {"soil": ["Black Soil"], "avg_profit": 130000, "market_demand": 9},
+  "Grapes": {"soil": ["Black Soil"], "avg_profit": 140000, "market_demand": 9},
+
+  "Onion": {"soil": ["Black Soil", "Alluvial Soil"], "avg_profit": 70000, "market_demand": 9},
+  "Potato": {"soil": ["Alluvial Soil"], "avg_profit": 65000, "market_demand": 8},
+  "Chilli": {"soil": ["Black Soil", "Red Soil"], "avg_profit": 75000, "market_demand": 8},
+  "Beans": {"soil": ["Red Soil", "Alluvial Soil"], "avg_profit": 50000, "market_demand": 7},
+  "Laal Math": {"soil": ["Red Soil"], "avg_profit": 45000, "market_demand": 6}
+}
