@@ -1,9 +1,15 @@
 import streamlit as st
 import pandas as pd
 import datetime
+import joblib
 
 from core.recommendation import calculate_ai_score
 from core.risk_engine import calculate_crop_risk
+
+# =========================
+# LOAD ML MODEL
+# =========================
+yield_model = joblib.load("yield_model.pkl")
 
 # =========================
 # PAGE CONFIG
@@ -115,9 +121,6 @@ if page == "Dashboard":
             profit
         )
 
-        # =========================
-        # AI INSIGHTS
-        # =========================
         st.subheader("📊 AI Insights")
 
         col1, col2, col3 = st.columns(3)
@@ -136,80 +139,54 @@ if page == "Dashboard":
             st.write("💰 Estimated Profit:", f"₹ {profit:,}")
             st.write("Recommended Crop:", best_crop)
 
-        # =========================
-        # CROP LIST
-        # =========================
-        st.subheader("🌾 AI Recommended Crops")
-
-        for crop, score in top_crops:
-            st.write(f"{crop} – Confidence: {score}%")
-
-        # =========================
-        # ANALYTICS CHART
-        # =========================
-        st.subheader("📊 Crop Confidence Analytics")
-
-        chart_df = pd.DataFrame({
-            "Crop": [c for c, _ in top_crops],
-            "Confidence": [s for _, s in top_crops]
-        })
-
-        st.bar_chart(chart_df.set_index("Crop"))
-
-        # =========================
-        # RISK ALERT
-        # =========================
         st.subheader("⚠ Crop Risk Alert")
-
         st.write("Risk Level:", risk_level)
 
         if risk_reasons:
-            st.write("Reasons:")
             for r in risk_reasons:
                 st.write("-", r)
         else:
             st.write("No major risk detected ✅")
 
-        # =========================
-        # DOWNLOAD REPORT
-        # =========================
-        report = f"""
-SMART AGRICULTURE AI - FARM REPORT
-----------------------------------
+    # =========================
+    # ML YIELD PREDICTION
+    # =========================
+    st.divider()
+    st.subheader("🌾 ML Yield Prediction (AI Regression Model)")
 
-State: {state}
-District: {district}
+    N = st.number_input("Nitrogen")
+    P = st.number_input("Phosphorus")
+    K = st.number_input("Potassium")
+    
+    humidity = st.number_input("Humidity")
+    ph = st.number_input("pH")
+    rainfall = st.number_input("Rainfall")
 
-Soil Details:
-Primary Soil: {soil_data['primary']}
-Secondary Soil: {soil_data['secondary']}
-Texture: {soil_data['texture']}
-Drainage: {soil_data['drainage']}
+    if st.button("Predict Yield"):
 
-Temperature: {temperature}°C
-Season: {season}
+        input_data = [N, P, K, temperature, humidity, ph, rainfall]
 
-Suitability Score: {suitability}%
-
-Recommended Crop: {best_crop}
-Estimated Profit: ₹{profit:,}
-
-Risk Level: {risk_level}
-"""
-
-        if risk_reasons:
-            report += "\nRisk Reasons:\n"
-            for r in risk_reasons:
-                report += f"- {r}\n"
+        if all(v == 0 for v in input_data):
+            st.warning("Please enter realistic soil and climate values.")
         else:
-            report += "\nNo major risk detected.\n"
+            input_df = pd.DataFrame([input_data], columns=[
+                "N", "P", "K",
+                "temperature",
+                "humidity",
+                "ph",
+                "rainfall"
+            ])
 
-        st.download_button(
-            label="📥 Download Farm Report",
-            data=report,
-            file_name=f"{district}_farm_report.txt",
-            mime="text/plain"
-        )
+            prediction = yield_model.predict(input_df)[0]
+
+            st.success(f"🌾 Expected Yield: {round(prediction, 2)} tons/hectare")
+
+            chart_df = pd.DataFrame({
+                "Metric": ["Predicted Yield"],
+                "Value": [prediction]
+            })
+
+            st.bar_chart(chart_df.set_index("Metric"))
 
 # =========================
 # OTHER PAGES
